@@ -17,7 +17,8 @@ fastai==1.0.60
 # Required by mlflow.spacy
 spacy
 # Required by mlflow.tensorflow
-tensorflow==1.15.2
+tensorflow
+#tensorflow==1.15.2
 # Required by mlflow.pytorch
 torch
 torchvision
