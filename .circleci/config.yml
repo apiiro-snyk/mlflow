@@ -20,7 +20,7 @@ jobs:
           name: Install dependencies
           command: |
             sudo apt-get update && sudo apt-get install git
-            pip install awscli
+            pip install awscli==1.19.112
             pip install wheel
 
       - run:
