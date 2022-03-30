@@ -22,7 +22,7 @@ RUN apt-get update && \
     # install npm for node.js support
 #    curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
     cd mlflow/server/js && \
-    npm install && \
+    npm install --legacy-peer-deps && \
     npm run build
 
 COPY script/start.sh /opt/mlflow/start.sh
