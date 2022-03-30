@@ -8,6 +8,18 @@ teardown({
   mlflow_clear_test_dir(testthat_model_name)
 })
 
+test_that("mlflow model creation time format", {
+  mlflow_clear_test_dir(testthat_model_name)
+  model <- lm(Sepal.Width ~ Sepal.Length, iris)
+  fn <- crate(~ stats::predict(model, .x), model = model)
+  model_spec <- mlflow_save_model(fn, testthat_model_name, model_spec = list(
+    utc_time_created = mlflow_timestamp()
+  ))
+  
+  expect_true(dir.exists(testthat_model_name))
+  expect_match(model_spec$utc_time_created, "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{6}")
+})
+
 test_that("mlflow can save model function", {
   mlflow_clear_test_dir(testthat_model_name)
   model <- lm(Sepal.Width ~ Sepal.Length, iris)
@@ -107,4 +119,15 @@ test_that("mlflow log model records correct metadata with the tracking server", 
     expect_equal(run$run_uuid[1], model_spec_actual$run_id)
     expect_equal(model_spec_expected$flavors, model_spec_actual$flavors)
   })
+})
+
+test_that("mlflow can save and load attributes of model flavor correctly", {
+  model_name <- basename(tempfile("model_"))
+  model <- structure(list(), class = "trivial")
+  path <- file.path(tempdir(), model_name)
+  mlflow_save_model(model, path = path)
+  model <- mlflow_load_model(path)
+
+  expect_equal(attributes(model$flavor)$spec$key1, "value1")
+  expect_equal(attributes(model$flavor)$spec$key2, "value2")
 })
