@@ -28,7 +28,7 @@ lightgbm
 # Required by mlflow.catboost
 catboost
 # Required by mlflow.statsmodels
-statsmodels 
+statsmodels
 # Required by mlflow.h2o
 h2o
 # Required by mlflow.onnx

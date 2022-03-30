@@ -12,7 +12,7 @@ RUN apt-get update && \
     # install required python packages
     cd requirements && \
     pip install -r dev-requirements.txt --no-cache-dir && \
-    pip install -r test-requirements.txt --no-cache-dir && \
+    # pip install -r test-requirements.txt --no-cache-dir && \
     pip install psycopg2 && \
     cd .. && \
     # install mlflow in editable form
