@@ -8,7 +8,7 @@ RUN apt-get update && \
     # install prequired modules to support install of mlflow and related components
     apt-get install -y default-libmysqlclient-dev build-essential curl postgresql-server-dev-all \
     # cmake and protobuf-compiler required for onnx install
-    cmake protobuf-compiler &&  \
+    cmake protobuf-compiler nodejs yarn &&  \
     # install required python packages
     cd requirements && \
     pip install -r dev-requirements.txt --no-cache-dir && \
