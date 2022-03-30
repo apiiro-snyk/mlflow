@@ -6,9 +6,9 @@ ADD . /app
 
 RUN apt-get update && \
     # install prequired modules to support install of mlflow and related components
-    apt-get install -y default-libmysqlclient-dev build-essential curl postgresql-server-dev-all \
+    apt-get install -y nodejs default-libmysqlclient-dev build-essential curl postgresql-server-dev-all \
     # cmake and protobuf-compiler required for onnx install
-    cmake protobuf-compiler nodejs yarn &&  \
+    cmake protobuf-compiler yarn &&  \
     # install required python packages
     cd requirements && \
     pip install -r dev-requirements.txt --no-cache-dir && \
@@ -20,7 +20,7 @@ RUN apt-get update && \
     # mkdir required to support install openjdk-11-jre-headless
     mkdir -p /usr/share/man/man1 && apt-get install -y openjdk-11-jre-headless && \
     # install npm for node.js support
-    curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
+#    curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
     cd mlflow/server/js && \
     npm install && \
     npm run build
