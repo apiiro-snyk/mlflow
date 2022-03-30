@@ -21,7 +21,6 @@ RUN apt-get update && \
     mkdir -p /usr/share/man/man1 && apt-get install -y openjdk-11-jre-headless && \
     # install npm for node.js support
     curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
-    apt-get update && apt-get install -y nodejs && \
     cd mlflow/server/js && \
     npm install && \
     npm run build
