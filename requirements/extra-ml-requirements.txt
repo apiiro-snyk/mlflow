@@ -16,10 +16,7 @@ fastai>=2.4.1
 spacy
 # Required by mlflow.tensorflow
 tensorflow
-<<<<<<< HEAD:dev/extra-ml-requirements.txt
 #tensorflow==1.15.2
-=======
->>>>>>> d6d4d63fbaf1a98b70c450c49658a56fcb3f55b8:requirements/extra-ml-requirements.txt
 # Required by mlflow.pytorch
 torch
 torchvision
