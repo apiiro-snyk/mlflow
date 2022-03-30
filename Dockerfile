@@ -11,7 +11,7 @@ RUN apt-get update && \
     cmake protobuf-compiler &&  \
     # install required python packages
     pip install -r dev-requirements.txt --no-cache-dir && \
-    pip install -r test-requirements.txt --no-cache-dir && \
+#    pip install -r test-requirements.txt --no-cache-dir && \
     pip install psycopg2 && \
     # install mlflow in editable form
     pip install --no-cache-dir -e . && \
