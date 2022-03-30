@@ -10,7 +10,7 @@ RUN apt-get update && \
     # cmake and protobuf-compiler required for onnx install
     cmake protobuf-compiler &&  \
     # install required python packages
-    pip install -r dev-requirements.txt --no-cache-dir && \
+    pip install -r requirements/dev-requirements.txt --no-cache-dir && \
 #    pip install -r test-requirements.txt --no-cache-dir && \
     pip install psycopg2 && \
     # install mlflow in editable form
