@@ -5,6 +5,7 @@ import sqlalchemy
 
 from mlflow.entities.model_registry.model_version_stages import (
     get_canonical_stage,
+    ALL_STAGES,
     DEFAULT_STAGES_FOR_GET_LATEST_VERSIONS,
     STAGE_DELETED_INTERNAL,
     STAGE_ARCHIVED,
@@ -57,7 +58,7 @@ def now():
 
 class SqlAlchemyStore(AbstractStore):
     """
-    Note:: Experimental: This entity may change or be removed in a future release without warning.
+    This entity may change or be removed in a future release without warning.
     SQLAlchemy compliant backend store for tracking meta data for MLflow entities. MLflow
     supports the database dialects ``mysql``, ``mssql``, ``sqlite``, and ``postgresql``.
     As specified in the
@@ -88,7 +89,7 @@ class SqlAlchemyStore(AbstractStore):
         super().__init__()
         self.db_uri = db_uri
         self.db_type = extract_db_type_from_uri(db_uri)
-        self.engine = mlflow.store.db.utils.create_sqlalchemy_engine(db_uri)
+        self.engine = mlflow.store.db.utils.create_sqlalchemy_engine_with_retry(db_uri)
         Base.metadata.create_all(self.engine)
         # Verify that all model registry tables exist.
         SqlAlchemyStore._verify_registry_tables_exist(self.engine)
@@ -432,7 +433,7 @@ class SqlAlchemyStore(AbstractStore):
 
         :param name: Registered model name.
         :param stages: List of desired stages. If input list is None, return latest versions for
-                       for 'Staging' and 'Production' stages.
+                       each stage.
         :return: List of :py:class:`mlflow.entities.model_registry.ModelVersion` objects.
         """
         with self.ManagedSessionMaker() as session:
@@ -440,9 +441,7 @@ class SqlAlchemyStore(AbstractStore):
             # Convert to RegisteredModel entity first and then extract latest_versions
             latest_versions = sql_registered_model.to_mlflow_entity().latest_versions
             if stages is None or len(stages) == 0:
-                expected_stages = set(
-                    [get_canonical_stage(stage) for stage in DEFAULT_STAGES_FOR_GET_LATEST_VERSIONS]
-                )
+                expected_stages = set([get_canonical_stage(stage) for stage in ALL_STAGES])
             else:
                 expected_stages = set([get_canonical_stage(stage) for stage in stages])
             return [mv for mv in latest_versions if mv.current_stage in expected_stages]
@@ -499,7 +498,7 @@ class SqlAlchemyStore(AbstractStore):
     # CRUD API for ModelVersion objects
 
     def create_model_version(
-        self, name, source, run_id, tags=None, run_link=None, description=None
+        self, name, source, run_id=None, tags=None, run_link=None, description=None
     ):
         """
         Create a new model version from given source and run ID.
@@ -662,7 +661,7 @@ class SqlAlchemyStore(AbstractStore):
                 conditions = [
                     SqlModelVersion.name == name,
                     SqlModelVersion.version != version,
-                    SqlModelVersion.current_stage == stage,
+                    SqlModelVersion.current_stage == get_canonical_stage(stage),
                 ]
                 model_versions = session.query(SqlModelVersion).filter(*conditions).all()
                 for mv in model_versions:
