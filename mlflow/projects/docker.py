@@ -15,6 +15,7 @@ from mlflow.projects.utils import MLFLOW_DOCKER_WORKDIR_PATH
 from mlflow.tracking.context.git_context import _get_git_commit
 from mlflow.utils import process, file_utils
 from mlflow.utils.mlflow_tags import MLFLOW_DOCKER_IMAGE_URI, MLFLOW_DOCKER_IMAGE_ID
+from mlflow.utils.file_utils import _handle_readonly_on_windows
 
 _logger = logging.getLogger(__name__)
 
@@ -76,7 +77,7 @@ def build_docker_image(work_dir, repository_uri, base_image, run_id):
         )
     try:
         os.remove(build_ctx_path)
-    except Exception:  # pylint: disable=broad-except
+    except Exception:
         _logger.info("Temporary docker context file %s was not deleted.", build_ctx_path)
     tracking.MlflowClient().set_tag(run_id, MLFLOW_DOCKER_IMAGE_URI, image_uri)
     tracking.MlflowClient().set_tag(run_id, MLFLOW_DOCKER_IMAGE_ID, image.id)
@@ -114,7 +115,7 @@ def _create_docker_build_ctx(work_dir, dockerfile_contents):
             output_filename=result_path, source_dir=dst_path, archive_name=_PROJECT_TAR_ARCHIVE_NAME
         )
     finally:
-        shutil.rmtree(directory)
+        shutil.rmtree(directory, onerror=_handle_readonly_on_windows)
     return result_path
 
 

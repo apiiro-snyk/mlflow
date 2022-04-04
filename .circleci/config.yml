@@ -22,7 +22,6 @@ jobs:
             sudo apt-get update && sudo apt-get install git
             pip install awscli
             pip install wheel
-
       - run:
           name: build docker image
           no_output_timeout: 30m
@@ -31,7 +30,6 @@ jobs:
             aws ecr get-login --no-include-email --region us-east-1
             cd ~/repo
             docker build . -t mlflow
-
       - deploy:
           name: push docker image
 
@@ -40,7 +38,6 @@ jobs:
             aws ecr get-login --no-include-email --region us-east-1 | bash
             docker tag mlflow:latest "${ECR_ENDPOINT}/mlflow:${CIRCLE_SHA1}"
             docker push "${ECR_ENDPOINT}/mlflow:${CIRCLE_SHA1}"
-
 workflows:
   version: 2
   test_build:
