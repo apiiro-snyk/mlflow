@@ -24,6 +24,7 @@ jobs:
             pip install wheel
       - run:
           name: build docker image
+          no_output_timeout: 30m
 
           command: |
             aws ecr get-login --no-include-email --region us-east-1
