@@ -5,3 +5,6 @@ service:
   lifecycle: generally_available
   language: Python
   description: |
+  tags:
+    - key: no-parameters
+      value: true
