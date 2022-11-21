@@ -20,6 +20,7 @@ jobs:
           name: Install dependencies
           command: |
             sudo apt-get update && sudo apt-get install git
+            conda install python=3.7
             pip install --upgrade pip
             pip install awscli
             pip install wheel
