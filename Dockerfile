@@ -47,7 +47,8 @@ RUN apt-get update && \
     # install required python packages
     pip install -r requirements/dev-requirements.txt --no-cache-dir && \
     # install mlflow in editable form
-    pip install --no-cache-dir -e .
+    pip install --no-cache-dir -e . && \
+    pip install psycopg2-binary
 
 RUN mkdir -p /usr/share/man/man1 && apt-get install -y openjdk-11-jre-headless && \
     # install npm for node.js support
