@@ -44,10 +44,11 @@ RUN apt-get update && \
     . /opt/conda/etc/profile.d/conda.sh && \
     conda activate mlflow && \
     conda install charset-normalizer=2.0.12 && \
+    pip3 install psycopg2 && \
     # install required python packages
-    pip install -r requirements/dev-requirements.txt --no-cache-dir && \
+    pip3 install -r requirements/dev-requirements.txt --no-cache-dir && \
     # install mlflow in editable form
-    pip install --no-cache-dir -e .
+    pip3 install --no-cache-dir -e .
 
 RUN mkdir -p /usr/share/man/man1 && apt-get install -y openjdk-11-jre-headless && \
     # install npm for node.js support
