@@ -33,6 +33,8 @@ WORKDIR /app
 ADD . /app
 
 ENV DEBIAN_FRONTEND=noninteractive
+COPY script/start.sh /opt/mlflow/start.sh
+
 RUN apt-get update && \
     # install prequired modules to support install of mlflow and related components
     apt-get install -y default-libmysqlclient-dev build-essential curl \
@@ -40,7 +42,7 @@ RUN apt-get update && \
     cmake protobuf-compiler &&  \
     # Without `charset-normalizer=2.0.12`, `conda install` below would fail with:
     # CondaHTTPError: HTTP 404 NOT FOUND for url <https://conda.anaconda.org/conda-forge/noarch/charset-normalizer-2.0.11-pyhd8ed1ab_0.conda>
-    conda install python=3.7 charset-normalizer=2.0.12 && \
+    conda install python=3.7.1 charset-normalizer=2.0.12 && \
     # install required python packages
     pip install -r requirements/dev-requirements.txt --no-cache-dir && \
     # install mlflow in editable form
@@ -54,5 +56,3 @@ RUN mkdir -p /usr/share/man/man1 && apt-get install -y openjdk-11-jre-headless &
     npm install && \
     npm run build
 
-
-COPY script/start.sh /opt/mlflow/start.sh
