@@ -44,7 +44,6 @@ RUN apt-get update && \
     . /opt/conda/etc/profile.d/conda.sh && \
     conda activate mlflow && \
     conda install charset-normalizer=2.0.12 && \
-    pip install psycopg2-binary && \
     # install required python packages
     pip install -r requirements/dev-requirements.txt --no-cache-dir && \
     # install mlflow in editable form
