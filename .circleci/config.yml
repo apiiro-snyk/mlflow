@@ -9,7 +9,7 @@ jobs:
     working_directory: ~/repo
 
     machine:
-      image: ubuntu-2004:202201-02
+      image: condaforge/miniforge3:4.11.0-4
       docker_layer_caching: true
       resource_class: medium
 
