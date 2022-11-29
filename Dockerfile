@@ -37,7 +37,8 @@ COPY script/start.sh /opt/mlflow/start.sh
 
 RUN apt-get update && \
     # install prequired modules to support install of mlflow and related components
-    apt-get install -y default-libmysqlclient-dev build-essential curl \
+    apt-get install -y default-libmysqlclient-dev build-essential curl && \
+    apt-get install tree \
     # cmake and protobuf-compiler required for onnx install
     cmake protobuf-compiler &&  \
     # Without `charset-normalizer=2.0.12`, `conda install` below would fail with:
@@ -45,14 +46,17 @@ RUN apt-get update && \
     conda install python=3.7.1 charset-normalizer=2.0.12 && \
     # install required python packages
     pip install -r requirements/dev-requirements.txt --no-cache-dir && \
+    pip install psycopg2 && \
     # install mlflow in editable form
     pip install --no-cache-dir -e .
 
 RUN mkdir -p /usr/share/man/man1 && apt-get install -y openjdk-11-jre-headless && \
     # install npm for node.js support
-    curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
+    curl -sL https://deb.nodesource.com/setup_lts.x | bash - && \
     apt-get update && apt-get install -y nodejs && \
     cd mlflow/server/js && \
     npm install && \
     npm run build
+
+RUN tree
 
