@@ -1,7 +1,8 @@
+---
 service:
   name: mlflow
-  # This should be the same (after aliases have been resolved) to what is in here:  https://github.com/ConsultingMD/platform-map/blob/master/service_mapping.yaml
   owner: data-science-platform
+  tier: tier_3
   lifecycle: generally_available
   language: Python
   description: |
