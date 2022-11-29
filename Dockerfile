@@ -51,5 +51,8 @@ RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
     yarn install && \
     yarn build
 
+RUN apt-get install -y tree
+RUN tree
+
 COPY script/start.sh /opt/mlflow/start.sh
 
