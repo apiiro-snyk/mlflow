@@ -26,36 +26,30 @@
 #    npm run build
 
 
-FROM condaforge/miniforge3:4.11.0-4
+FROM python:3.8
 
 WORKDIR /app
 
 ADD . /app
 
 ENV DEBIAN_FRONTEND=noninteractive
-COPY script/start.sh /opt/mlflow/start.sh
-
 RUN apt-get update && \
     # install prequired modules to support install of mlflow and related components
-    apt-get install -y default-libmysqlclient-dev build-essential curl tree \
+    apt-get install -y default-libmysqlclient-dev build-essential curl openjdk-11-jre-headless \
     # cmake and protobuf-compiler required for onnx install
-    cmake protobuf-compiler \
-    # Without `charset-normalizer=2.0.12`, `conda install` below would fail with:
-    # CondaHTTPError: HTTP 404 NOT FOUND for url <https://conda.anaconda.org/conda-forge/noarch/charset-normalizer-2.0.11-pyhd8ed1ab_0.conda>
-    conda install python=3.7 charset-normalizer=2.0.12 \
+    cmake protobuf-compiler &&  \
     # install required python packages
     pip install -r requirements/dev-requirements.txt --no-cache-dir && \
-    pip install psycopg2 && \
     # install mlflow in editable form
     pip install --no-cache-dir -e .
 
-RUN mkdir -p /usr/share/man/man1 && apt-get install -y openjdk-11-jre-headless && \
-    # install npm for node.js support
-    curl -sL https://deb.nodesource.com/setup_lts.x | bash - && \
+# Build MLflow UI
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
     apt-get update && apt-get install -y nodejs && \
+    npm install --global yarn && \
     cd mlflow/server/js && \
-    npm install && \
-    npm run build
+    yarn install && \
+    yarn build
 
-RUN tree
+COPY script/start.sh /opt/mlflow/start.sh
 
