@@ -38,7 +38,8 @@ RUN apt-get update && \
     apt-get install -y default-libmysqlclient-dev build-essential curl openjdk-11-jre-headless \
     # cmake and protobuf-compiler required for onnx install
     cmake protobuf-compiler &&  \
-    # install required python packages
+    # install required python packages \
+    pip install psycopg2-binary && \
     pip install -r requirements/dev-requirements.txt --no-cache-dir && \
     # install mlflow in editable form
     pip install --no-cache-dir -e .

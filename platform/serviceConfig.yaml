@@ -13,7 +13,7 @@ webApps:
     protocol: http
     port: 5000
     image: 311088406905.dkr.ecr.us-east-1.amazonaws.com/mlflow
-    command: 'script/start.sh'
+    command: '/opt/mlflow/start.sh'
     healthcheckPath: /health
     env:
       uat:
