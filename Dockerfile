@@ -39,10 +39,10 @@ RUN apt-get update && \
     # install prequired modules to support install of mlflow and related components
     apt-get install -y default-libmysqlclient-dev build-essential curl tree \
     # cmake and protobuf-compiler required for onnx install
-    cmake protobuf-compiler &&  \
+    cmake protobuf-compiler \
     # Without `charset-normalizer=2.0.12`, `conda install` below would fail with:
     # CondaHTTPError: HTTP 404 NOT FOUND for url <https://conda.anaconda.org/conda-forge/noarch/charset-normalizer-2.0.11-pyhd8ed1ab_0.conda>
-    conda install python=3.7.1 charset-normalizer=2.0.12 && \
+    conda install python=3.7 charset-normalizer=2.0.12 \
     # install required python packages
     pip install -r requirements/dev-requirements.txt --no-cache-dir && \
     pip install psycopg2 && \
