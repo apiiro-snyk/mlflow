@@ -1,45 +1,25 @@
-# Python CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-python/ for more details
-#
 version: 2.1
 jobs:
 
   build:
-    working_directory: ~/repo
-
-    machine:
-      image: ubuntu-2004:202201-02
-      docker_layer_caching: true
-      resource_class: medium
+    docker:
+      - image: $ECR_ENDPOINT/image-builder:master
 
     steps:
       - checkout
-
-      - run:
-          name: Install dependencies
-          command: |
-            sudo apt-get update && sudo apt-get install git
-            pip install awscli
-            pip install wheel
+      - setup_remote_docker:
+          docker_layer_caching: true
       - run:
           name: build docker image
           no_output_timeout: 30m
 
           command: |
-            aws ecr get-login --no-include-email --region us-east-1
-            cd ~/repo
-            docker build . -t mlflow
-      - deploy:
-          name: push docker image
-
-          command: |
-            echo 'Pushing image to OPS ECR'
-            aws ecr get-login --no-include-email --region us-east-1 | bash
-            docker tag mlflow:latest "${ECR_ENDPOINT}/mlflow:${CIRCLE_SHA1}"
-            docker push "${ECR_ENDPOINT}/mlflow:${CIRCLE_SHA1}"
+            build-and-push --image mlflow --file Dockerfile --build-dir .
+            
 workflows:
   version: 2
   test_build:
     jobs:
-      - build: {}
+      - build:
+          context:
+            - ecr
