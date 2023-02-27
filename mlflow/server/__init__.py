@@ -13,6 +13,11 @@ from mlflow.server.handlers import (
     get_model_version_artifact_handler,
 )
 from mlflow.utils.process import exec_cmd
+from ih_telemetry.init import initialize_telemetry
+from ih_telemetry.middleware import make_app_with_telemetry
+
+def post_fork(server, worker):
+    initialize_telemetry()
 
 # NB: These are intenrnal environment variables used for communication between
 # the cli and the forked gunicorn processes.
@@ -26,6 +31,7 @@ ARTIFACTS_ONLY_ENV_VAR = "_MLFLOW_SERVER_ARTIFACTS_ONLY"
 REL_STATIC_DIR = "js/build"
 
 app = Flask(__name__, static_folder=REL_STATIC_DIR)
+app = make_app_with_telemetry(app)
 STATIC_DIR = os.path.join(app.root_path, REL_STATIC_DIR)
 
 
