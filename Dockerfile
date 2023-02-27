@@ -46,7 +46,7 @@ RUN apt-get update && \
 
 # Install IH telemetry
 ARG PYPI_INDEX
-RUN pip install --no-deps ih-telemetry --index-url $PYPI_INDEX
+RUN pip install ih-telemetry --extra-index-url $PYPI_INDEX
 
 # Build MLflow UI
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
