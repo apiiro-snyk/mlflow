@@ -14,7 +14,7 @@ jobs:
           no_output_timeout: 30m
 
           command: |
-            build-and-push --image mlflow --file Dockerfile --build-dir .
+            build-and-push --image mlflow --file Dockerfile --build-dir . --build-arg PYPI_INDEX=$PYPI_INDEX
             
 workflows:
   version: 2
