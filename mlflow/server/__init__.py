@@ -157,4 +157,4 @@ def _run_server(
     exec_cmd(full_command, env=env_map, stream_output=True)
 
 
-app = make_app_with_telemetry(mlflow.server.app)
+app = make_app_with_telemetry(app)
