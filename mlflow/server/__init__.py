@@ -31,7 +31,6 @@ ARTIFACTS_ONLY_ENV_VAR = "_MLFLOW_SERVER_ARTIFACTS_ONLY"
 REL_STATIC_DIR = "js/build"
 
 app = Flask(__name__, static_folder=REL_STATIC_DIR)
-app = make_app_with_telemetry(app)
 STATIC_DIR = os.path.join(app.root_path, REL_STATIC_DIR)
 
 
@@ -46,7 +45,7 @@ if os.getenv(PROMETHEUS_EXPORTER_ENV_VAR):
         os.makedirs(prometheus_metrics_path)
     activate_prometheus_exporter(app)
 
-
+app = make_app_with_telemetry(app)
 # Provide a health check endpoint to ensure the application is responsive
 @app.route("/health")
 def health():
