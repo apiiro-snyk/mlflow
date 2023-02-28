@@ -16,8 +16,10 @@ from mlflow.utils.process import exec_cmd
 from ih_telemetry.init import initialize_telemetry
 from ih_telemetry.middleware import make_app_with_telemetry
 
+
 def post_fork(server, worker):
     initialize_telemetry()
+
 
 # NB: These are intenrnal environment variables used for communication between
 # the cli and the forked gunicorn processes.
@@ -33,7 +35,6 @@ REL_STATIC_DIR = "js/build"
 app = Flask(__name__, static_folder=REL_STATIC_DIR)
 STATIC_DIR = os.path.join(app.root_path, REL_STATIC_DIR)
 
-
 for http_path, handler, methods in handlers.get_endpoints():
     app.add_url_rule(http_path, handler.__name__, handler, methods=methods)
 
@@ -45,7 +46,7 @@ if os.getenv(PROMETHEUS_EXPORTER_ENV_VAR):
         os.makedirs(prometheus_metrics_path)
     activate_prometheus_exporter(app)
 
-app = make_app_with_telemetry(app)
+
 # Provide a health check endpoint to ensure the application is responsive
 @app.route("/health")
 def health():
@@ -98,9 +99,9 @@ def serve():
 def _build_waitress_command(waitress_opts, host, port):
     opts = shlex.split(waitress_opts) if waitress_opts else []
     return (
-        ["waitress-serve"]
-        + opts
-        + ["--host=%s" % host, "--port=%s" % port, "--ident=mlflow", "mlflow.server:app"]
+            ["waitress-serve"]
+            + opts
+            + ["--host=%s" % host, "--port=%s" % port, "--ident=mlflow", "mlflow.server:app"]
     )
 
 
@@ -111,18 +112,18 @@ def _build_gunicorn_command(gunicorn_opts, host, port, workers):
 
 
 def _run_server(
-    file_store_path,
-    default_artifact_root,
-    serve_artifacts,
-    artifacts_only,
-    artifacts_destination,
-    host,
-    port,
-    static_prefix=None,
-    workers=None,
-    gunicorn_opts=None,
-    waitress_opts=None,
-    expose_prometheus=None,
+        file_store_path,
+        default_artifact_root,
+        serve_artifacts,
+        artifacts_only,
+        artifacts_destination,
+        host,
+        port,
+        static_prefix=None,
+        workers=None,
+        gunicorn_opts=None,
+        waitress_opts=None,
+        expose_prometheus=None,
 ):
     """
     Run the MLflow server, wrapping it in gunicorn or waitress on windows
@@ -153,3 +154,7 @@ def _run_server(
     else:
         full_command = _build_gunicorn_command(gunicorn_opts, host, port, workers or 4)
     exec_cmd(full_command, env=env_map, stream_output=True)
+
+
+application = app
+application = make_app_with_telemetry(application)
