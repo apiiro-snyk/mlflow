@@ -5,6 +5,7 @@ import textwrap
 
 from flask import Flask, send_from_directory, Response
 
+import mlflow.server
 from mlflow.server import handlers
 from mlflow.server.handlers import (
     get_artifact_handler,
@@ -156,5 +157,4 @@ def _run_server(
     exec_cmd(full_command, env=env_map, stream_output=True)
 
 
-application = app
-application = make_app_with_telemetry(application)
+app = make_app_with_telemetry(mlflow.server.app)
