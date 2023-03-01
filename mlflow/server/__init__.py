@@ -14,12 +14,7 @@ from mlflow.server.handlers import (
     get_model_version_artifact_handler,
 )
 from mlflow.utils.process import exec_cmd
-from ih_telemetry.init import initialize_telemetry
 from ih_telemetry.middleware import make_app_with_telemetry
-
-
-def post_fork(server, worker):
-    initialize_telemetry()
 
 
 # NB: These are intenrnal environment variables used for communication between
