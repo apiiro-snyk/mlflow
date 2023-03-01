@@ -5,6 +5,7 @@ import textwrap
 
 from flask import Flask, send_from_directory, Response
 
+import mlflow.server
 from mlflow.server import handlers
 from mlflow.server.handlers import (
     get_artifact_handler,
@@ -13,6 +14,8 @@ from mlflow.server.handlers import (
     get_model_version_artifact_handler,
 )
 from mlflow.utils.process import exec_cmd
+from ih_telemetry.middleware import make_app_with_telemetry
+
 
 # NB: These are intenrnal environment variables used for communication between
 # the cli and the forked gunicorn processes.
@@ -27,7 +30,6 @@ REL_STATIC_DIR = "js/build"
 
 app = Flask(__name__, static_folder=REL_STATIC_DIR)
 STATIC_DIR = os.path.join(app.root_path, REL_STATIC_DIR)
-
 
 for http_path, handler, methods in handlers.get_endpoints():
     app.add_url_rule(http_path, handler.__name__, handler, methods=methods)
@@ -93,9 +95,9 @@ def serve():
 def _build_waitress_command(waitress_opts, host, port):
     opts = shlex.split(waitress_opts) if waitress_opts else []
     return (
-        ["waitress-serve"]
-        + opts
-        + ["--host=%s" % host, "--port=%s" % port, "--ident=mlflow", "mlflow.server:app"]
+            ["waitress-serve"]
+            + opts
+            + ["--host=%s" % host, "--port=%s" % port, "--ident=mlflow", "mlflow.server:app"]
     )
 
 
@@ -106,18 +108,18 @@ def _build_gunicorn_command(gunicorn_opts, host, port, workers):
 
 
 def _run_server(
-    file_store_path,
-    default_artifact_root,
-    serve_artifacts,
-    artifacts_only,
-    artifacts_destination,
-    host,
-    port,
-    static_prefix=None,
-    workers=None,
-    gunicorn_opts=None,
-    waitress_opts=None,
-    expose_prometheus=None,
+        file_store_path,
+        default_artifact_root,
+        serve_artifacts,
+        artifacts_only,
+        artifacts_destination,
+        host,
+        port,
+        static_prefix=None,
+        workers=None,
+        gunicorn_opts=None,
+        waitress_opts=None,
+        expose_prometheus=None,
 ):
     """
     Run the MLflow server, wrapping it in gunicorn or waitress on windows
@@ -148,3 +150,6 @@ def _run_server(
     else:
         full_command = _build_gunicorn_command(gunicorn_opts, host, port, workers or 4)
     exec_cmd(full_command, env=env_map, stream_output=True)
+
+
+app = make_app_with_telemetry(app.wsgi_app)
