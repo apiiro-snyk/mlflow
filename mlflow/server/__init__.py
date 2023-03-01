@@ -104,6 +104,7 @@ def _build_waitress_command(waitress_opts, host, port):
 def _build_gunicorn_command(gunicorn_opts, host, port, workers):
     bind_address = "%s:%s" % (host, port)
     opts = shlex.split(gunicorn_opts) if gunicorn_opts else []
+    return ["gunicorn"] + opts + ["-b", bind_address, "-c", "./gunicorn.conf.py", "-w", "%s" % workers, "mlflow.server:app"]
     return ["gunicorn"] + opts + ["-b", bind_address, "-w", "%s" % workers, "mlflow.server:app"]
 
 
