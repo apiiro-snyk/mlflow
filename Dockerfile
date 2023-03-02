@@ -56,4 +56,6 @@ RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
     yarn install && \
     yarn build
 
+ENV GUNICORN_CONF_LOCATION=/opt/mlflow/gunicorn.conf.py
+COPY mlflow/server/gunicorn.conf.py $GUNICORN_CONF_LOCATION
 COPY script/start.sh /opt/mlflow/start.sh
