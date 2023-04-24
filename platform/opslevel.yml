@@ -11,3 +11,10 @@ service:
       value: true
     - key: no-tng-infrastructure
       value: true
+    # The basic tag indicates to OpsLevel that this service is treated as a component.
+    # A component is a service that does not really benefit from the OpsLevel rubric
+    # or campaigns because it is (usually) developed by some other group.
+    # Components are priced differently so please don't remove this unless the nature
+    # of this service changes.
+    - key: basic
+      value: true
