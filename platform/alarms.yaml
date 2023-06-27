@@ -1,4 +1,0 @@
-# These three lines are the minimum need for initial opt-in
-version: 1
-alarmMode: eval
-escalationPolicy: "default"
