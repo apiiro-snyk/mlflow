@@ -12,7 +12,7 @@
     "@ant-design/icons": "^4.0.0",
     "@databricks/design-system": "^0.2.1",
     "@emotion/react": "^11.7.1",
-    "antd": "^4.16.8",
+    "antd": "^4.24.16",
     "babel-core": "^7.0.0-bridge.0",
     "bytes": "3.0.0",
     "classnames": "^2.2.6",
