@@ -48,3 +48,4 @@ pyspark
 # prophet
 # Required by mlflow.pmdarima
 # pmdarima
+zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
